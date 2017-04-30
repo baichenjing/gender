@@ -1,5 +1,6 @@
 numpy
 scipy
 flask
+gunicorn
 sklearn
 git+https://github.com/xgeric/gopage

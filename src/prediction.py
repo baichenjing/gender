@@ -1,6 +1,7 @@
 from classifier.clf_vote import ClfVote
 from classifier.clf_name import ClfName
 from classifier.clf_page import ClfPage
+from classifier.clf_face import ClfFace
 
 
 def is_chinese(check_str):
@@ -14,6 +15,7 @@ def predict_gender(person):
     clfs = [
         ClfPage,
         ClfName,
+        ClfFace,
         ClfVote,
     ]
     clf2ans = dict(zip(
