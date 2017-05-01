@@ -17,9 +17,11 @@ class Database:
         self.path = join(self.dbdir, self.name)
 
     def ensure_db(self):
-        if self.name not in self.name2db:
+        print('ensure')
+        if self.name not in Database.name2db:
             self.db = leveldb.LevelDB(self.path)
-            self.name2db[self.name] = self.db
+            Database.name2db[self.name] = self.db
+            print(list(Database.name2db.keys()))
 
     def get(self, key):
         self.ensure_db()
