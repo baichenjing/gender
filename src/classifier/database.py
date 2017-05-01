@@ -12,13 +12,15 @@ class Database:
     gopage.util.mkdir(dbdir)
 
     def __init__(self, name):
+        self.db = None
         self.name = 'db_{}'.format(name)
         self.path = join(self.dbdir, self.name)
 
     def ensure_db(self):
-        if self.name not in Database.name2db:
+        if self.name not in self.name2db:
             try:
-                Database.name2db[self.name] = leveldb.LevelDB(self.path)
+                self.db = leveldb.LevelDB(self.path)
+                self.name2db[self.name] = self.db
             except Exception:
                 pass
 
@@ -26,7 +28,7 @@ class Database:
         self.ensure_db()
         try:
             key = key.encode('utf-8')
-            ret = Database.name2db[self.name].Get(key)
+            ret = self.db.Get(key)
             return json.loads(ret.decode('utf-8'))
         except Exception:
             return None
@@ -35,10 +37,9 @@ class Database:
         self.ensure_db()
         key = key.encode('utf-8')
         if isinstance(value, str):
-            Database.name2db[self.name].Put(key, value)
+            self.db.Put(key, value)
         else:
-            Database.name2db[self.name].Put(
-                key, json.dumps(value).encode('utf-8'))
+            self.db.Put(key, json.dumps(value).encode('utf-8'))
 
 # def cache():
 #     def decorator(func):
