@@ -27,7 +27,7 @@ class Database:
     def get(self, key):
         self.ensure_db()
         try:
-            key = key.encode('utf-8')
+            key = key.lower().encode('utf-8')
             ret = self.db.Get(key)
             return json.loads(ret.decode('utf-8'))
         except Exception:
@@ -35,11 +35,15 @@ class Database:
 
     def put(self, key, value):
         self.ensure_db()
-        key = key.encode('utf-8')
+        key = key.lower().encode('utf-8')
         if isinstance(value, str):
             self.db.Put(key, value)
         else:
             self.db.Put(key, json.dumps(value).encode('utf-8'))
+
+    def keys(self):
+        self.ensure_db()
+        return [k.decode('utf-8') for k, v in self.db.RangeIter()]
 
 # def cache():
 #     def decorator(func):

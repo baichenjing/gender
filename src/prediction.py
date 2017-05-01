@@ -26,6 +26,13 @@ def predict_gender(person):
     if is_chinese(person['name']):
         return clf2ans
 
+    try:
+        person['name'] = person['name'].lower()
+        person['affiliation'] = person['affiliation'].lower()
+    except Exception:
+        pass
+
+    person['dbkey'] = '{}*:*{}'.format(person['name'], person['affiliation'])
     person['clf2ans'] = {}
     for clf in clfs:
         gender, proba = clf.predict_person(person)

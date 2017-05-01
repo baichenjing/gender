@@ -19,7 +19,7 @@ class Gpage:
 
     def get_snippets(self):
         try:
-            query = '{} his OR her'.format(self.person['name'])
+            query = '{} {} his OR her'.format(self.person['name'], self.person['affiliation'])
             gpage = gopage.crawler.search(query, useproxy=False)
             if not gpage:
                 return None
@@ -108,7 +108,7 @@ class ClfPage:
 
     @classmethod
     def predict_person(cls, person):
-        dbresult = cls.database.get(person['name'])
+        dbresult = cls.database.get(person['dbkey'])
         if dbresult is not None:
             return dbresult
 
@@ -125,5 +125,5 @@ class ClfPage:
         else:
             gender, proba = 'female', round(fproba, 4) * 100
 
-        cls.database.put(person['name'], [gender, proba])
+        cls.database.put(person['dbkey'], [gender, proba])
         return gender, proba

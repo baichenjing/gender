@@ -69,6 +69,22 @@ def extract_ch():
     return jsonify(clf2ans)
 
 
+@app.route('/recent', methods=['GET', 'OPTIONS'])
+@crossdomain(origin='*')
+def recent():
+    from classifier.clf_page import ClfPage
+    recents = []
+    database = ClfPage.database
+    for k in database.keys():
+        name, aff = k.split('*:*')
+        person = {'name': name, 'affiliation': aff}
+        result = predict_gender(person)
+        result['Aff'] = aff
+        result['Name'] = name
+        recents.append(result)
+    return jsonify(recents)
+
+
 @app.route('/')
 @app.route('/index')
 def index():
