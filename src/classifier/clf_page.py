@@ -1,6 +1,7 @@
 import pickle
 import gopage.parser
 import gopage.crawler
+from classifier.database import Database
 from os.path import join, dirname
 
 
@@ -17,13 +18,18 @@ class Gpage:
         self.snippets = []
 
     def get_snippets(self):
-        query = '{} his OR her'.format(self.person['name'])
-        gpage = gopage.crawler.search(query, useproxy=False)
-        self.snippets = gopage.parser.parse(gpage)
+        try:
+            query = '{} his OR her'.format(self.person['name'])
+            gpage = gopage.crawler.search(query, useproxy=False)
+            if not gpage:
+                return None
+            self.snippets = gopage.parser.parse(gpage)
+        except Exception:
+            return None
 
     def get_features(self):
         self.get_snippets()
-        if len(self.snippets) == 0 or self.snippets is None:
+        if not self.snippets or len(self.snippets) == 0:
             return None
 
         tfHis = 0
@@ -94,6 +100,7 @@ class ClfPage:
     name = 'WebGP'
     model = None
     threshold = 0.59
+    database = Database(name)
 
     model_file = open(join(dirname(__file__), 'model_page.pk'), 'rb')
     model = pickle.load(model_file, encoding='latin1')
@@ -101,13 +108,22 @@ class ClfPage:
 
     @classmethod
     def predict_person(cls, person):
-        gender, label = 'UNKNOWN', 'None'
+        dbresult = cls.database.get(person['name'])
+        if dbresult is not None:
+            return dbresult
+
+        gender, proba = 'UNKNOWN', 'None'
         gpage = Gpage(person)
         features = gpage.get_features()
         if features is None:
-            return gender, label
+            return gender, proba
+
         mproba = cls.model.predict_proba([features])[0][1]
         fproba = 1 - mproba
         if mproba > cls.threshold:
-            return 'male', round(mproba, 4) * 100
-        return 'female', round(fproba, 4) * 100
+            gender, proba = 'male', round(mproba, 4) * 100
+        else:
+            gender, proba = 'female', round(fproba, 4) * 100
+
+        cls.database.put(person['name'], [gender, proba])
+        return gender, proba

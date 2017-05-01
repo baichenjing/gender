@@ -1,6 +1,8 @@
 numpy
 scipy
 flask
-gunicorn
 sklearn
+leveldb
+hashlib
+gunicorn
 git+https://github.com/xgeric/gopage
