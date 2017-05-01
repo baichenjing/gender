@@ -75,7 +75,7 @@ def recent():
     from classifier.clf_page import ClfPage
     recents = []
     database = ClfPage.database
-    for k in database.keys():
+    for k in database.keys()[:10]:
         name, aff = k.split('*:*')
         person = {'name': name, 'affiliation': aff}
         result = predict_gender(person)
