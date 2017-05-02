@@ -76,11 +76,13 @@ def recent():
     recents = []
     database = ClfPage.database
     for k in database.keys()[:10]:
+        name, aff = k.split('*:*')
         dbresult = RECENT_DB.get(k)
         if dbresult is not None:
+            dbresult['Aff'] = aff
+            dbresult['Name'] = name
             recents.append(dbresult)
             continue
-        name, aff = k.split('*:*')
         person = {'name': name, 'affiliation': aff}
         result = predict_gender(person)
         result['Aff'] = aff
