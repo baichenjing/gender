@@ -56,7 +56,7 @@ class ClfFace:
         return image_base64
 
     @classmethod
-    def face_detect_url(cls, image_base64, retry=2):
+    def face_detect_url(cls, image_base64, retry=3):
         if retry < 1:
             return []
         try:
@@ -73,8 +73,7 @@ class ClfFace:
             rdict = r.json()
             if 'error_message' in rdict and rdict['error_message'] == 'CONCURRENCY_LIMIT_EXCEEDED':
                 print('sleep')
-                retry += 1
-                time.sleep(2)
+                time.sleep(1)
             return rdict['faces']
         except Exception as e:
             print(e)
