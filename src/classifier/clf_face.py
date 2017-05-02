@@ -5,7 +5,7 @@ import requests
 import base64
 import gopage.util
 import gopage.crawler
-from os.path import dirname, join
+from classifier.database import Database
 
 
 class GIParser:
@@ -41,6 +41,7 @@ class ClfFace:
     name = 'FR'
     API_KEY = 't45w4oezhIu3MTxy89-9xFW9XN2uoXnH'
     API_SECRET = 'vYnF72umd6O20m0m8G-i44mlzamY88bG'
+    database = Database(name)
 
     @classmethod
     def get_image(cls, person):
@@ -50,11 +51,8 @@ class ClfFace:
             return None
         image_id = GIParser.get_image_id(image_html)
         base64_info = GIParser.get_base64_with_id(image_id, image_html)
-        image_type = base64_info['type']
+        # image_type = base64_info['type']
         image_base64 = base64_info['base64']
-
-        with open('image.{}'.format(image_type), 'wb') as fh:
-            fh.write(base64.decodestring(image_base64.encode('utf-8')))
         return image_base64
 
     @classmethod
@@ -84,6 +82,10 @@ class ClfFace:
 
     @classmethod
     def predict_person(cls, person):
+        dbresult = cls.database.get(person['dbkey'])
+        if dbresult is not None:
+            return dbresult
+
         gender = 'UNKNOWN'
         confidence = 50.0
         image_path = cls.get_image(person)
@@ -106,4 +108,6 @@ class ClfFace:
             confidence = round(confidence, 2)
         else:
             gender = 'UNKNOWN'
+        if gender != 'UNKNOWN':
+            cls.database.put(person['dbkey'], [gender, confidence])
         return gender, confidence

@@ -19,7 +19,8 @@ class Gpage:
 
     def get_snippets(self):
         try:
-            query = '{} {} his OR her'.format(self.person['name'], self.person['affiliation'])
+            query = '{} {} his OR her'.format(
+                self.person['name'], self.person['affiliation'])
             gpage = gopage.crawler.search(query, useproxy=False)
             if not gpage:
                 return None
