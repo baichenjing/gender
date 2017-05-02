@@ -10,7 +10,7 @@ from flask import make_response, request, current_app
 from datetime import timedelta
 from functools import update_wrapper
 
-from prediction import predict_gender
+from prediction import predict_gender, RECENT_DB
 
 app = Flask(__name__)
 
@@ -76,6 +76,10 @@ def recent():
     recents = []
     database = ClfPage.database
     for k in database.keys()[:10]:
+        dbresult = RECENT_DB.get(k)
+        if dbresult is not None:
+            recents.append(dbresult)
+            continue
         name, aff = k.split('*:*')
         person = {'name': name, 'affiliation': aff}
         result = predict_gender(person)

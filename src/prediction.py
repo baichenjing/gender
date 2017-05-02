@@ -2,6 +2,9 @@ from classifier.clf_vote import ClfVote
 from classifier.clf_name import ClfName
 from classifier.clf_page import ClfPage
 from classifier.clf_face import ClfFace
+from classifier.database import Database
+
+RECENT_DB = Database('recent')
 
 
 def is_chinese(check_str):
@@ -45,5 +48,7 @@ def predict_gender(person):
             clf2ans[clf.name]['m_proba'] = '{:.2f}%'.format(male_proba)
             clf2ans[clf.name]['f_proba'] = '{:.2f}%'.format(100 - male_proba)
         person['clf2ans'][clf.name] = (gender, proba)
+
+    RECENT_DB.put(person['dbkey'], clf2ans)
 
     return clf2ans
