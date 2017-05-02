@@ -38,12 +38,12 @@ def predict_gender(person):
         gender, proba = clf.predict_person(person)
         clf2ans[clf.name] = {
             'gender': gender,
-            'probability': '{}%'.format(proba)
+            'probability': '{:.2f}%'.format(proba)
         }
         if isinstance(clf, ClfVote):
             male_proba = proba if gender == 'male' else 100 - proba
-            clf2ans[clf.name]['m_proba'] = '{}%'.format(male_proba)
-            clf2ans[clf.name]['f_proba'] = '{}%'.format(100 - male_proba)
+            clf2ans[clf.name]['m_proba'] = '{:.2f}%'.format(male_proba)
+            clf2ans[clf.name]['f_proba'] = '{:.2f}%'.format(100 - male_proba)
         person['clf2ans'][clf.name] = (gender, proba)
 
     return clf2ans
