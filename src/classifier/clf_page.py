@@ -1,7 +1,6 @@
 import pickle
 import gopage.parser
 import gopage.crawler
-from classifier.database import Database
 from os.path import join, dirname
 
 
@@ -98,10 +97,9 @@ class Gpage:
 
 
 class ClfPage:
-    name = 'WebGP'
+    name = 'Google'
     model = None
     threshold = 0.59
-    database = Database(name)
 
     model_file = open(join(dirname(__file__), 'model_page.pk'), 'rb')
     model = pickle.load(model_file, encoding='latin1')
@@ -109,10 +107,6 @@ class ClfPage:
 
     @classmethod
     def predict_person(cls, person):
-        dbresult = cls.database.get(person['dbkey'])
-        if dbresult is not None:
-            return dbresult
-
         gender, proba = 'UNKNOWN', 'None'
         gpage = Gpage(person)
         features = gpage.get_features()
@@ -122,9 +116,8 @@ class ClfPage:
         mproba = cls.model.predict_proba([features])[0][1]
         fproba = 1 - mproba
         if mproba > cls.threshold:
-            gender, proba = 'male', round(mproba, 4) * 100
+            gender, proba = 'male', round(mproba, 4)
         else:
-            gender, proba = 'female', round(fproba, 4) * 100
+            gender, proba = 'female', round(fproba, 4)
 
-        cls.database.put(person['dbkey'], [gender, proba])
         return gender, proba

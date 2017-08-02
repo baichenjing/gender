@@ -3,7 +3,7 @@ from os.path import join, dirname
 
 
 class ClfName:
-    name = 'FGNL'
+    name = 'Name'
     n2g_file = open(join(dirname(__file__), 'model_name.json'))
     fname2gender = json.load(n2g_file)
 
@@ -20,6 +20,6 @@ class ClfName:
         try:
             fistname = cls.get_firstname(person['name'])
             gender = cls.fname2gender[fistname]
-            return gender, 100.0
+            return gender, 1
         except KeyError:
-            return 'UNKNOWN', 50.0
+            return 'UNKNOWN', 0.5

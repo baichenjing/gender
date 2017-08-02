@@ -14,17 +14,18 @@ class ClfVote:
             is_clf_page = cname == ClfPage.name
             if gender == 'female':
                 fvote += 1 + int(is_clf_page) * 0.1
-                male_confidence += 100 - proba
+                male_confidence += 1 - proba
             elif gender == 'male':
                 mvote += 1 + int(is_clf_page) * 0.1
                 male_confidence += proba
             else:
                 continue
-        # if fvote == mvote:
-        if male_confidence == 50:
-            return 'UNKNOWN', 50.0
+
+        if male_confidence == 0.5:
+            return 'UNKNOWN', 0.5
+
         male_confidence = round(male_confidence / int(fvote + mvote), 2)
-        # if fvote > mvote:
-        if male_confidence < 50:
-            return 'female', 100 - male_confidence
+        if male_confidence < 0.5:
+            return 'female', 1 - male_confidence
+
         return 'male', male_confidence
