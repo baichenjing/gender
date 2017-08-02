@@ -58,7 +58,7 @@ def crossdomain(origin=None, methods=None, headers=None,
 
 
 @app.route('/api/ch', methods=['GET', 'OPTIONS'])
-@crossdomain(origin='*')
+# @crossdomain(origin='*')
 def extract_ch():
     aff = request.args.get('aff')
     name = request.args.get('name')
@@ -70,23 +70,19 @@ def extract_ch():
 
 
 @app.route('/recent', methods=['GET', 'OPTIONS'])
-@crossdomain(origin='*')
+# @crossdomain(origin='*')
 def recent():
     from classifier.clf_page import ClfPage
     recents = []
-    database = ClfPage.database
+    database = RECENT_DB
     for k in database.keys()[:10]:
         name, aff = k.split('*:*')
         dbresult = RECENT_DB.get(k)
         if dbresult is not None:
-            dbresult['Aff'] = aff
-            dbresult['Name'] = name
             recents.append(dbresult)
             continue
         person = {'name': name, 'affiliation': aff}
         result = predict_gender(person)
-        result['Aff'] = aff
-        result['Name'] = name
         recents.append(result)
     return jsonify(recents)
 

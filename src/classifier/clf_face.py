@@ -39,8 +39,6 @@ class GIParser:
 
 class ClfFace:
     name = 'FR'
-    API_KEY = 't45w4oezhIu3MTxy89-9xFW9XN2uoXnH'
-    API_SECRET = 'vYnF72umd6O20m0m8G-i44mlzamY88bG'
     database = Database(name)
 
     @classmethod
@@ -60,10 +58,10 @@ class ClfFace:
         if retry < 1:
             return []
         try:
-            url = 'https://api-cn.faceplusplus.com/facepp/v3/detect'
+            url = 'https://api-us.faceplusplus.com/facepp/v3/detect'
             data = {
-                "api_key": "t45w4oezhIu3MTxy89-9xFW9XN2uoXnH",
-                "api_secret": "vYnF72umd6O20m0m8G-i44mlzamY88bG",
+                "api_key": "l2XHjL9rPAmwwt7iKsxZKy2xxQ1E20Lm",
+                "api_secret": "Ddu5os9DILwACvZvc2iM7ebAKs6hyFaB",
                 # "image_file": "@{}".format(image_base64),
                 "image_base64": image_base64,
                 "return_landmark": "1",

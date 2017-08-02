@@ -26,6 +26,9 @@ def predict_gender(person):
         [{'gender': 'UNKNOWN', 'probability': 'None'}] * len(clfs)
     ))
 
+    clf2ans['Aff'] = person['affiliation']
+    clf2ans['Name'] = person['name']
+
     if is_chinese(person['name']):
         return clf2ans
 
