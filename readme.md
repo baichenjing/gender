@@ -11,7 +11,7 @@ We incorporate several classifiers here:
 
 * Google
 
-  We extract features from the first Google search page of the scholar, with which we train a SVM classifer for prediction. A pre-trained model is provided in classifier/model_page.pk as a pickle file.
+  We extract features from the first Google search page of the scholar, with which we train a SVM classifer for prediction. A pre-trained model is provided in classifier/model_page.pk as a pickle file. Find more details in our paper: [Web User Profiling Using Data Redundancy](http://keg.cs.tsinghua.edu.cn/jietang/publications/ASONAM16-Gu-et-al-web-user-profiling.pdf)
 
 * Name
 
